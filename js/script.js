@@ -2,17 +2,17 @@ function playSong(filename) {
   const audio = document.getElementById("audioPlayer");
   const img = document.getElementById("songImage");
 
-  audio.src = "assets/music/" + filename;
+  audio.src = "music/" + filename;
   audio.play();
 
   // Mapping lagu ke gambar
   const songCovers = {
-    "glue_song.mp3": "assets/mc_album/glue_song.jpg",
-    "fix_you.mp3": "assets/mc_album/fix_you.jpg",
-    "anything_you_want.mp3": "assets/mc_album/anything_you_want.jpg",
-    "my_love_mine_all_mine.mp3": "assets/mc_album/my_love_mine_all_mine.jpg",
-    "same_dream.mp3": "assets/mc_album/same_dream.jpg",
-    "kita_usahakan_rumah_itu.mp3": "assets/mc_album/kita_usahakan_rumah_itu.jpg",
+    "glue_song.mp3": "mc_album/glue_song.jpg",
+    "fix_you.mp3": "mc_album/fix_you.jpg",
+    "anything_you_want.mp3": "mc_album/anything_you_want.jpg",
+    "my_love_mine_all_mine.mp3": "mc_album/my_love_mine_all_mine.jpg",
+    "same_dream.mp3": "mc_album/same_dream.jpg",
+    "kita_usahakan_rumah_itu.mp3": "mc_album/kita_usahakan_rumah_itu.jpg",
   };
 
   img.src = songCovers[filename] || "";
