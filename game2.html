@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Puzzle Foto Kenangan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#fffbe6] flex flex-col items-center p-6 font-sans">
+  <h1 class="text-3xl font-bold text-[#0926e1] mb-4">Puzzle Foto Kenangan Ito dan Ici</h1>
+
+  <!-- Pilih Foto -->
+  <div class="flex gap-4 mb-4">
+    <img src="assets/image/foto-kenangan1.jpg" class="w-24 h-24 object-cover cursor-pointer border-4 border-transparent hover:border-blue-500 rounded" onclick="selectImage('assets/image/foto-kenangan1.jpg')">
+    <img src="assets/image/foto-kenangan2.jpg" class="w-24 h-24 object-cover cursor-pointer border-4 border-transparent hover:border-blue-500 rounded" onclick="selectImage('assets/image/foto-kenangan2.jpg')">
+    <img src="assets/image/foto-kenangan3.jpg" class="w-24 h-24 object-cover cursor-pointer border-4 border-transparent hover:border-blue-500 rounded" onclick="selectImage('assets/image/foto-kenangan3.jpg')">
+    <img src="assets/image/foto-kenangan4.jpg" class="w-24 h-24 object-cover cursor-pointer border-4 border-transparent hover:border-blue-500 rounded" onclick="selectImage('assets/image/foto-kenangan4.jpg')">
+  </div>
+
+  <!-- Pilih Ukuran -->
+  <div class="mb-4">
+    <label class="mr-2 font-semibold">Mas Pilih Ukuran Puzzle Dulu:</label>
+    <select id="gridSize" class="border px-2 py-1 rounded">
+      <option value="3">3 x 3</option>
+      <option value="4">4 x 4</option>
+      <option value="5">5 x 5</option>
+    </select>
+    <button onclick="startPuzzle()" class="bg-blue-600 text-white px-3 py-1 rounded ml-2">Mulai Puzzle</button>
+  </div>
+
+  <div id="puzzleContainer" class="grid gap-[2px] p-2 bg-white rounded-lg shadow-lg"></div>
+
+  <button onclick="checkAnswer()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded">Cek Jawaban Mas</button>
+
+  <script>
+    let originalOrder = [];
+    let selectedImage = 'img/1.png';
+    let gridSize = 3;
+
+    function selectImage(path) {
+      selectedImage = path;
+    }
+
+    function startPuzzle() {
+      const container = document.getElementById('puzzleContainer');
+      container.innerHTML = '';
+      gridSize = parseInt(document.getElementById('gridSize').value);
+
+      const tileSize = 300 / gridSize;
+      container.style.gridTemplateColumns = `repeat(${gridSize}, ${tileSize}px)`;
+      container.style.gridTemplateRows = `repeat(${gridSize}, ${tileSize}px)`;
+
+      originalOrder = [];
+
+      for (let i = 0; i < gridSize * gridSize; i++) {
+        originalOrder.push(i);
+      }
+
+      const shuffled = [...originalOrder];
+      shuffleArray(shuffled);
+
+      shuffled.forEach((index) => {
+        const tile = document.createElement('div');
+        tile.classList.add('border', 'w-full', 'h-full', 'cursor-pointer');
+        tile.style.width = `${tileSize}px`;
+        tile.style.height = `${tileSize}px`;
+        tile.style.backgroundImage = `url(${selectedImage})`;
+        tile.style.backgroundSize = `${gridSize * 100}% ${gridSize * 100}%`;
+
+        const row = Math.floor(index / gridSize);
+        const col = index % gridSize;
+        tile.style.backgroundPosition = `${(col * 100) / (gridSize - 1)}% ${(row * 100) / (gridSize - 1)}%`;
+
+        tile.dataset.correctIndex = index;
+        tile.dataset.currentIndex = shuffled.indexOf(index);
+        tile.addEventListener('click', () => selectTile(tile));
+        container.appendChild(tile);
+      });
+    }
+
+    let selectedTile = null;
+
+    function selectTile(tile) {
+      if (!selectedTile) {
+        selectedTile = tile;
+        tile.classList.add('ring', 'ring-blue-500');
+      } else {
+        swapTiles(selectedTile, tile);
+        selectedTile.classList.remove('ring', 'ring-blue-500');
+        selectedTile = null;
+      }
+    }
+
+    function swapTiles(tile1, tile2) {
+      const temp = tile1.style.backgroundPosition;
+      tile1.style.backgroundPosition = tile2.style.backgroundPosition;
+      tile2.style.backgroundPosition = temp;
+
+      const tempIndex = tile1.dataset.correctIndex;
+      tile1.dataset.correctIndex = tile2.dataset.correctIndex;
+      tile2.dataset.correctIndex = tempIndex;
+    }
+
+    function checkAnswer() {
+      const tiles = document.getElementById('puzzleContainer').children;
+      for (let i = 0; i < tiles.length; i++) {
+        if (parseInt(tiles[i].dataset.correctIndex) !== originalOrder[i]) {
+          alert('Belum tepat Mas 🥰 Coba lagi yaa!');
+          return;
+        }
+      }
+      alert('Selamat! Mas berhasil menyusun puzzle ini dengan benar! Ici bangga 🧩❤️');
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+  </script>
+</body>
+</html>
